@@ -1,6 +1,6 @@
 class Piece
   attr_accessor :position
-  attr_reader :colour, :board
+  attr_reader :colour, :board, :moves
 
   def initialize(position, board, colour)
     @position, @board, @colour = position, board, colour
@@ -17,6 +17,7 @@ class Piece
   end
 
   def allied_collision?(pos)
+    p pos
     return false if @board[pos].nil?
     @board[pos].colour == @colour
   end
@@ -42,6 +43,10 @@ class Piece
     return "[#{colour},r]" if self.class == Rook
   end
 
+  def deltas
+    self.class::DELTAS
+  end
+
 end
 
 # myboard[0,2] would return the piece at that position on the board
@@ -55,9 +60,9 @@ class SlidingPiece < Piece
   def moves
     moves = []
 
-    @delta.each do |direction|
-      @delta[0], @delta[1] = dx, dy
-      @position[0], @position[1] = x, y
+    @deltas.each do |direction|
+      dx, dy = @deltas[0], @deltas[1]
+      x, y = @position[0], @position[1]
       move = [x + dx, y + dy]
 
       until !allied_collision(move) || !on_board?(move)
@@ -72,7 +77,7 @@ class SlidingPiece < Piece
 end
 
 class Bishop < SlidingPiece
- @delta = [
+ DELTAS = [
     [1 , 1],
     [1 ,-1],
     [-1, 1],
@@ -81,7 +86,7 @@ class Bishop < SlidingPiece
 end
 
 class Rook < SlidingPiece
-  @delta = [
+  DELTAS = [
     [1, 0],
     [0, 1],
     [-1,0],
@@ -91,7 +96,7 @@ class Rook < SlidingPiece
 end
 
 class Queen < SlidingPiece
-  @delta = [
+  DELTAS = [
     [1, 0],
     [0, 1],
     [-1,0],
@@ -118,11 +123,11 @@ class SteppingPiece < Piece
   end
 
   def all_pos_moves
-    x, y = @position[0], @postion[1]
+    x, y = @position[0], @position[1]
     all_pos_moves = []
-    @deltas.each do |delta|
-      @delta[0], @delta[1] = dx, dy
-      all_pos_moves << [x+ dx1, y + dy]
+    deltas.each do |delta|
+      dx, dy = delta[0], delta[1]
+      all_pos_moves << [x+ dx, y + dy]
     end
 
     all_pos_moves
@@ -131,7 +136,7 @@ class SteppingPiece < Piece
 end
 
 class King < SteppingPiece
-  @deltas = [
+  DELTAS = [
     [-1, -1],
     [-1,  0],
     [-1,  1],
@@ -145,7 +150,7 @@ class King < SteppingPiece
 end
 
 class Knight < SteppingPiece
-  @deltas = [
+  DELTAS = [
     [-2, -1],
     [-2,  1],
     [-1, -2],
@@ -176,9 +181,9 @@ end
 class Board
   attr_accessor :board
 
-  def initialize
+  def initialize(populate=true)
     @board = Array.new(8) {Array.new(8)}
-    setup_board
+    setup_board if populate
   end
 
   def setup_board
