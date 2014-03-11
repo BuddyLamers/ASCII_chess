@@ -164,20 +164,36 @@ class Knight < SteppingPiece
 
 end
 
+def capture_opportunity?(pos)
+  square = @board[pos]
+  return false if square.nil?
+  square.colour != @colour #returns true if enemy
+end
+
 
 class Pawn < Piece
   def moves
     moves = []
     x, y = @position[0], @position[1]
-    if x == 1 || 6 #leap forwards
+    if y == 1 #|| 6 #leap forwards
       move = [x, y + 2]
-      moves << move if [x, y + 1].nil? && move.nil?
+      moves << move if board[[x, y + 1]].nil? && board[move].nil?
     end
-    moves << [x, y + 1] if [x, y + 1].nil? #one step
-    moves << [x+1, y+1] if capture_opportunity?([x+1, y+1]) #cap r
-    moves << [x-1, y+1] if capture_opportunity?([x-1, y+1]) #cap l
+    p [x, y + 1]
+
+    pos_cap1 = [x, y + 1]
+    moves << pos_cap1 if on_board?(pos_cap1) || !pos_cap1.nil? || allied_collision?(pos_cap1)
+    pos_cap2 = [x-1, y + 1]
+    moves << pos_cap2 if on_board?(pos_cap2) || !pos_cap2.nil? || allied_collision?(pos_cap2)
+    #moves << [x+1, y+1] if capture_opportunity?([x+1, y+1]) #cap r
+    #moves << [x-1, y+1] if capture_opportunity?([x-1, y+1]) #cap l
+
+    moves
   end
 end
+
+
+
 
 class Board
   attr_accessor :board
