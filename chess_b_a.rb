@@ -33,6 +33,16 @@ class Piece
     square.colour != @colour #returns true if enemy
   end
 
+  def inspect
+    return "K,#{colour}" if King
+    return "Q,#{colour}" if Queen
+    return "p,#{colour}" if Pawn
+    return "b,#{colour}" if Bishop
+    return "k,#{colour}" if Knight
+    return "r,#{colour}" if Rook
+    return '___'
+  end
+
 end
 
 # myboard[0,2] would return the piece at that position on the board
@@ -192,7 +202,6 @@ class Board
     setup_board
   end
 
-
   def setup_board
     setup_pawns
     setup_back
@@ -218,6 +227,15 @@ class Board
       self[[4, col]] = Queen.new( [4, col], self, colour)
     end
   end
+
+  def render
+    board.each do |row|
+      row.each do |col|
+        p (self[row, col])
+      end
+    end
+  end
+
 
 
   def [](pos)
