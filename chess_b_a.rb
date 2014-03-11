@@ -1,12 +1,13 @@
 class Piece
-  attr_accessor :position, :board
-  attr_reader :colour
+  attr_accessor :position
+  attr_reader :colour, :board
 
   def initialize(position, board, colour)
     @position, @board, @colour = position, board, colour
   end
 
   def moves
+    #make in sublasses and raise error in superclass
   end
 
   def on_board?(pos)
@@ -22,19 +23,20 @@ class Piece
 
   def capture_options(moves)
     capture_options = []
-    moves.each do |pos|
-      square = @board[pos]
-      capture_options << !square.nil? && square.colour != @colour
-    end
+    moves.each { |pos| capture_options << !@board[pos].nil? }
 
     capture_options
   end
 
+end
+
+# myboard[0,2] would return the piece at that position on the board
+
+class Board
   def [](pos)
     row, col = pos
     @board[row][col]
   end
-
 end
 
 
@@ -52,7 +54,7 @@ class SlidingPiece < Piece
       @position[0], @position[1] = x, y
       move = [x + dx, y + dy]
 
-      until !collision(move) || !on_board?(move)
+      until !allied_collision(move) || !on_board?(move)
         moves << move
         break if capture_opportunity?(move)
         move  = [move[0] + dx, move[1] + dy]
@@ -113,18 +115,15 @@ end
 
 class SteppingPiece < Piece
 
-  def moves(all_pos_moves) #calculates collisions and off board
-    #should take in all possible moves/move_dir
+  def moves(all_pos_moves)
     moves = []
     all_pos_moves.each do |pos|
       moves << pos if on_board?(pos) && !allied_collision?(pos)
-      #&& !piece_in_way(pos)
     end
 
     moves
   end
 
-  #method that gets HOW the piece moves, intakes "move_dirs"
   def all_pos_moves
     x, y = @position[0], @postion[1]
     all_pos_moves = []
@@ -140,7 +139,7 @@ class SteppingPiece < Piece
 end
 
 class King < SteppingPiece
-  #has method "move_dirs"
+
   def initialize
     @deltas = [
       [-1, -1],
@@ -157,7 +156,6 @@ class King < SteppingPiece
 end
 
 class Knight < SteppingPiece
-  #has method "move_dirs"
 
   @deltas = [
   [-2, -1],
@@ -169,10 +167,13 @@ class Knight < SteppingPiece
   [ 2, -1],
   [ 2,  1]
   ]
+
 end
 
 
 class Pawn < Piece
+
+
   #has it's own weirdness
 end
 
