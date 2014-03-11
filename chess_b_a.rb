@@ -23,9 +23,14 @@ class Piece
 
   def capture_options(moves)
     capture_options = []
-    moves.each { |pos| capture_options << !@board[pos].nil? }
-
+    moves.each { |pos| capture_options << pos if capture_opportunity?(pos) }
     capture_options
+  end
+
+  def capture_opportunity?(pos)
+    square = @board[pos]
+    return false if square.nil?
+    square.colour != @colour #returns true if enemy
   end
 
 end
@@ -46,7 +51,7 @@ class SlidingPiece < Piece
   #method that determines if other pieces are in the way
   # => filters the move set
 
-  def moves(move_dir)
+  def moves
     moves = []
 
     @delta.each do |direction|
@@ -65,11 +70,11 @@ class SlidingPiece < Piece
   end
 
 
-  def capture_opportunity?(pos)
-    square = @board[pos]
-    return false if square.nil?
-    square.colour != @colour #returns true if enemy
-  end
+  # def capture_opportunity?(pos)
+  #   square = @board[pos]
+  #   return false if square.nil?
+  #   square.colour != @colour #returns true if enemy
+  # end
 
 end
 
@@ -115,9 +120,10 @@ end
 
 class SteppingPiece < Piece
 
-  def moves(all_pos_moves)
+  def moves
     moves = []
-    all_pos_moves.each do |pos|
+    all_moves = all_pos_moves
+    all_moves.each do |pos|
       moves << pos if on_board?(pos) && !allied_collision?(pos)
     end
 
@@ -127,7 +133,6 @@ class SteppingPiece < Piece
   def all_pos_moves
     x, y = @position[0], @postion[1]
     all_pos_moves = []
-
     @deltas.each do |delta|
       @delta[0], @delta[1] = dx, dy
       all_pos_moves << [x+ dx1, y + dy]
@@ -173,7 +178,19 @@ end
 
 class Pawn < Piece
 
+  def moves
+    moves = []
+    x, y = @position[0], @position[1]
 
-  #has it's own weirdness
+    if x == 1 || 6 #leap forwards
+      move = [x, y + 2]
+      moves << move if [x, y + 1].nil? && move.nil?
+    end
+    moves << [x, y + 1] if [x, y + 1].nil? #one step
+    moves << [x+1, y+1] if capture_opportunity?([x+1, y+1]) #cap r
+    moves << [x-1, y+1] if capture_opportunity?([x-1, y+1]) #cap l
+
+  end
+
 end
 
