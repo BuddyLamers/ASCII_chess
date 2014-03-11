@@ -1,5 +1,6 @@
 class Piece
-  attr_accessor :position, :board, :colour
+  attr_accessor :position, :board
+  attr_reader :colour
 
   def initialize(position, board, colour)
     @position, @board, @colour = position, board, colour
@@ -18,13 +19,6 @@ class Piece
     return false if @board[pos].nil?
     @board[pos].colour == @colour
   end
-
-  # def piece_in_way(pos)
-  #   #if allied_collision, remove all possible further moves on that delta
-  #   # => same for capture
-  #
-  #
-  # end
 
   def capture_options(moves)
     capture_options = []
@@ -51,13 +45,28 @@ class SlidingPiece < Piece
   # => filters the move set
 
   def moves(move_dir)
-    #distinguish if diagonal/horizontal/vertical
+    moves = []
 
-    #until collision || capture || off_board keep adding each delta
-    # moves << the retults of above line
+    @delta.each do |direction|
+      @delta[0], @delta[1] = dx, dy
+      @position[0], @position[1] = x, y
+      move = [x + dx, y + dy]
+
+      until !collision(move) || !on_board?(move)
+        moves << move
+        break if capture_opportunity?(move)
+        move  = [move[0] + dx, move[1] + dy]
+      end
+    end
+
+    moves
   end
 
-  def capture?(pos)
+
+  def capture_opportunity?(pos)
+    square = @board[pos]
+    return false if square.nil?
+    square.colour != @colour #returns true if enemy
   end
 
 end
