@@ -1,3 +1,5 @@
+require 'debugger'
+
 class Piece
   attr_accessor :position
   attr_reader :colour, :board, :moves
@@ -17,7 +19,6 @@ class Piece
   end
 
   def allied_collision?(pos)
-    p pos
     return false if @board[pos].nil?
     @board[pos].colour == @colour
   end
@@ -60,12 +61,12 @@ class SlidingPiece < Piece
   def moves
     moves = []
 
-    @deltas.each do |direction|
-      dx, dy = @deltas[0], @deltas[1]
+    deltas.each do |direction|
+      dx, dy = direction[0], direction[1]
       x, y = @position[0], @position[1]
       move = [x + dx, y + dy]
 
-      until !allied_collision(move) || !on_board?(move)
+      until !on_board?(move) || allied_collision?(move)
         moves << move
         break if capture_opportunity?(move)
         move  = [move[0] + dx, move[1] + dy]
