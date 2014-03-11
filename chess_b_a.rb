@@ -33,14 +33,13 @@ class Piece
     square.colour != @colour #returns true if enemy
   end
 
-  def inspect
-    return "K,#{colour}" if King
-    return "Q,#{colour}" if Queen
-    return "p,#{colour}" if Pawn
-    return "b,#{colour}" if Bishop
-    return "k,#{colour}" if Knight
-    return "r,#{colour}" if Rook
-    return '___'
+  def render
+    return "[#{colour},K]" if self.class == King
+    return "[#{colour},Q]" if self.class == Queen
+    return "[#{colour},p]" if self.class == Pawn
+    return "[#{colour},b]" if self.class == Bishop
+    return "[#{colour},k]" if self.class == Knight
+    return "[#{colour},r]" if self.class == Rook
   end
 
 end
@@ -229,11 +228,19 @@ class Board
   end
 
   def render
-    board.each do |row|
-      row.each do |col|
-        p (self[row, col])
+    board.each_with_index do |row,idx1|
+      render_string = ""
+      row.each_index do |idx2|
+        piece = self[[idx1, idx2]]
+        if piece.nil?
+          render_string += "[___]"
+        else
+          render_string += piece.render
+        end
       end
+      puts render_string
     end
+    nil
   end
 
 
