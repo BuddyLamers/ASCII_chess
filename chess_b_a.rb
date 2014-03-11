@@ -5,13 +5,7 @@ class Piece
     @position, @board, @colour = position, board, colour
   end
 
-  def moves(move_dirs) #how the piece can move
-    moves = []
-    move_dirs.each do |pos|
-      moves << pos if on_board?(pos) && !collision?(pos)
-    end
-
-    moves
+  def moves
   end
 
   def on_board?(position)
@@ -20,9 +14,26 @@ class Piece
     end
   end
 
-  def collision?(position)
+  def allied_collision?(pos)
     return false if @board[pos].nil?
     @board[pos].colour == @colour
+  end
+
+  # def piece_in_way(pos)
+  #   #if allied_collision, remove all possible further moves on that delta
+  #   # => same for capture
+  #
+  #
+  # end
+
+  def capture_options(moves)
+    capture_options = []
+    moves.each do |pos|
+      square = @board[pos]
+      capture_options << !square.nil? && square.colour != @colour
+    end
+
+    capture_options
   end
 
   def [](pos)
@@ -38,13 +49,35 @@ class SlidingPiece < Piece
 
   #method that determines if other pieces are in the way
   # => filters the move set
+
+  def moves(move_dir)
+    #distinguish if diagonal/horizontal/vertical
+
+    #until collision || capture || off_board keep adding each delta
+    # moves << the retults of above line
+  end
+
+  def capture?(pos)
+  end
+
 end
 
 class Bishop < SlidingPiece
   #has method "move_dirs"
+  # def move_dir
+  #   :diagonal = true
+  #
+  # end
+
 end
 
 class Rook < SlidingPiece
+  @delta = [
+    [1, 0],
+    [0, 1],
+    [-1,0],
+    [0,-1]
+  ]
   #has method "move_dirs"
 end
 
@@ -57,17 +90,28 @@ end
 
 class SteppingPiece < Piece
 
+  def moves(all_pos_moves) #calculates collisions and off board
+    #should take in all possible moves/move_dir
+    moves = []
+    all_pos_moves.each do |pos|
+      moves << pos if on_board?(pos) && !allied_collision?(pos)
+      #&& !piece_in_way(pos)
+    end
+
+    moves
+  end
+
   #method that gets HOW the piece moves, intakes "move_dirs"
-  def move_dirs
+  def all_pos_moves
     x, y = @position[0], @postion[1]
-    move_dirs = []
+    all_pos_moves = []
 
     @deltas.each do |delta|
       @delta[0], @delta[1] = dx, dy
-      move_dirs << [x+ dx1, y + dy]
+      all_pos_moves << [x+ dx1, y + dy]
     end
 
-    move_dirs
+    all_pos_moves
   end
 
 end
@@ -91,6 +135,17 @@ end
 
 class Knight < SteppingPiece
   #has method "move_dirs"
+
+  @deltas = [
+  [-2, -1],
+  [-2,  1],
+  [-1, -2],
+  [-1,  2],
+  [ 1, -2],
+  [ 1,  2],
+  [ 2, -1],
+  [ 2,  1]
+  ]
 end
 
 
