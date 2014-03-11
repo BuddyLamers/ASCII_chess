@@ -208,16 +208,32 @@ class Board
   end
 
   def in_check?(colour)
-    #self.
+    king_pos = find_king(colour)
+    check_enemy_moves(colour, king_pos)
   end
 
   def find_king(colour)
     board.flatten.each do |square|
       next if square.nil?
       if square.class == King && square.colour == colour
-        return square
+        return square.position
+      end
     end
+    nil
   end
+
+  def check_enemy_moves(colour, position)
+    enemy_colour = (colour== :W ? :B : :W)
+
+    board.flatten.each do |square|
+      next if square.nil?
+      if square.class != King && square.colour == enemy_colour
+        return true if square.moves.include?(position)
+      end
+    end
+    false
+  end
+
 
   def render
     board.each_with_index do |row,idx1|
