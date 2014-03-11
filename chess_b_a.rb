@@ -8,8 +8,8 @@ class Piece
   def moves
   end
 
-  def on_board?(position)
-    position.all? do |coord|
+  def on_board?(pos)
+    pos.all? do |coord|
       coord.between?(0,7)
     end
   end
@@ -68,7 +68,12 @@ class Bishop < SlidingPiece
   #   :diagonal = true
   #
   # end
-
+  @delta = [
+    [1 , 1],
+    [1 ,-1],
+    [-1, 1],
+    [-1,-1]
+    ]
 end
 
 class Rook < SlidingPiece
@@ -83,7 +88,16 @@ end
 
 class Queen < SlidingPiece
   #has access to
-
+  @delta = [
+    [1, 0],
+    [0, 1],
+    [-1,0],
+    [0,-1],
+    [1 , 1],
+    [1 ,-1],
+    [-1, 1],
+    [-1,-1]
+  ]
   #has method "move_dirs"
 end
 
