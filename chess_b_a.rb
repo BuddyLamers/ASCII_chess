@@ -69,28 +69,15 @@ class SlidingPiece < Piece
 
     moves
   end
-
-
-  # def capture_opportunity?(pos)
-  #   square = @board[pos]
-  #   return false if square.nil?
-  #   square.colour != @colour #returns true if enemy
-  # end
-
 end
 
 class Bishop < SlidingPiece
-  #has method "move_dirs"
-  # def move_dir
-  #   :diagonal = true
-  #
-  # end
-  @delta = [
+ @delta = [
     [1 , 1],
     [1 ,-1],
     [-1, 1],
     [-1,-1]
-    ]
+  ]
 end
 
 class Rook < SlidingPiece
@@ -100,11 +87,10 @@ class Rook < SlidingPiece
     [-1,0],
     [0,-1]
   ]
-  #has method "move_dirs"
+
 end
 
 class Queen < SlidingPiece
-  #has access to
   @delta = [
     [1, 0],
     [0, 1],
@@ -115,7 +101,7 @@ class Queen < SlidingPiece
     [-1, 1],
     [-1,-1]
   ]
-  #has method "move_dirs"
+
 end
 
 
@@ -145,42 +131,38 @@ class SteppingPiece < Piece
 end
 
 class King < SteppingPiece
-
-    @deltas = [
-      [-1, -1],
-      [-1,  0],
-      [-1,  1],
-      [ 0, -1],
-      [ 0,  1],
-      [ 1, -1],
-      [ 1,  0],
-      [ 1,  1]
-      ]
+  @deltas = [
+    [-1, -1],
+    [-1,  0],
+    [-1,  1],
+    [ 0, -1],
+    [ 0,  1],
+    [ 1, -1],
+    [ 1,  0],
+    [ 1,  1]
+    ]
 
 end
 
 class Knight < SteppingPiece
-
   @deltas = [
-  [-2, -1],
-  [-2,  1],
-  [-1, -2],
-  [-1,  2],
-  [ 1, -2],
-  [ 1,  2],
-  [ 2, -1],
-  [ 2,  1]
+    [-2, -1],
+    [-2,  1],
+    [-1, -2],
+    [-1,  2],
+    [ 1, -2],
+    [ 1,  2],
+    [ 2, -1],
+    [ 2,  1]
   ]
 
 end
 
 
 class Pawn < Piece
-
   def moves
     moves = []
     x, y = @position[0], @position[1]
-
     if x == 1 || 6 #leap forwards
       move = [x, y + 2]
       moves << move if [x, y + 1].nil? && move.nil?
@@ -188,9 +170,7 @@ class Pawn < Piece
     moves << [x, y + 1] if [x, y + 1].nil? #one step
     moves << [x+1, y+1] if capture_opportunity?([x+1, y+1]) #cap r
     moves << [x-1, y+1] if capture_opportunity?([x-1, y+1]) #cap l
-
   end
-
 end
 
 class Board
@@ -227,6 +207,18 @@ class Board
     end
   end
 
+  def in_check?(colour)
+    #self.
+  end
+
+  def find_king(colour)
+    board.flatten.each do |square|
+      next if square.nil?
+      if square.class == King && square.colour == colour
+        return square
+    end
+  end
+
   def render
     board.each_with_index do |row,idx1|
       render_string = ""
@@ -242,8 +234,6 @@ class Board
     end
     nil
   end
-
-
 
   def [](pos)
     row, col = pos
