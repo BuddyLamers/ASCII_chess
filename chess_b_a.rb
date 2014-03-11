@@ -37,14 +37,6 @@ end
 
 # myboard[0,2] would return the piece at that position on the board
 
-class Board
-  def [](pos)
-    row, col = pos
-    @board[row][col]
-  end
-end
-
-
 class SlidingPiece < Piece
   #method that gets HOW the piece moves, intakes "move_dirs"
 
@@ -192,5 +184,53 @@ class Pawn < Piece
 
   end
 
+end
+
+class Board
+  attr_accessor :board
+
+
+
+  def initialize
+    @board = Array.new(8) {Array.new(8)}
+    setup_board
+  end
+
+  def setup_board
+    #set up pawns
+    @board.each_index do |row|
+      row[1] = Pawn.new([row,1], self , :W)
+      row[6] = Pawn.new([row,6], self , :B)
+    end
+    setup_white
+    setup_black
+  end
+
+  def setup_white
+    @board[0,0] = Rook.new([0,0], self, :W)
+    @board[7,0] = Rook.new([7,0], self, :W)
+    @board[1,0] = Knight.new([1,0], self, :W)
+    @board[6,0] = Knight.new([6,0], self, :W)
+    @board[2,0] = Bishop.new([2,0], self, :W)
+    @board[5,0] = Bishop.new([5,0], self, :W)
+    @board[3,0] = King.new([3,0], self, :W)
+    @board[4,0] = Queen.new([4,0], self, :W)
+  end
+
+  def setup_black
+    @board[0,7] = Rook.new([0,7], self, :B)
+    @board[7,7] = Rook.new([7,7], self, :B)
+    @board[1,7] = Knight.new([1,7], self, :B)
+    @board[6,7] = Knight.new([6,7], self, :B)
+    @board[2,7] = Bishop.new([2,7], self, :B)
+    @board[5,7] = Bishop.new([5,7], self, :B)
+    @board[3,7] = King.new([3,7], self, :B)
+    @board[4,7] = Queen.new([4,7], self, :B)
+  end
+
+  def [](pos)
+    row, col = pos
+    @board[row][col]
+  end
 end
 
