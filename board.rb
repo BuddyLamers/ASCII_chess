@@ -69,21 +69,22 @@ class Board
 
     raise "nothing there" if !start_pos_piece.nil?
     if start_pos_piece.moves.include?(end_pos)
-      if end_pos_piece.nil?
-        add_piece(start_pos_piece, end_pos)
-      else
-        remove_piece(end_pos)
-        add_piece(start_pos_piece, end_pos)
+      if !end_pos_piece.nil?
         puts "The #{self_pos_piece.render} captured the #{end_pos_piece.render}"
+        remove_piece(end_pos)
       end
+
+      add_piece(start_pos_piece, end_pos)
+      remove_piece(start)
     end
   end
 
   def add_piece(piece, pos)
-    self[pos] = piece
+    self[pos] = piece.class.new (pos, self, piece.colour)
   end
 
   def remove_piece(pos)
+    self[pos] = nil
   end
 
 
