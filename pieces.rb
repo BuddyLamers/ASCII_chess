@@ -1,6 +1,8 @@
+require "debugger"
+
 class Piece
   attr_accessor :position, :dup_board
-  attr_reader :colour, :board, :moves, :dup_board
+  attr_reader :colour, :board, :moves
 
   def initialize(position, board, colour)
     @position, @board, @colour = position, board, colour
@@ -42,32 +44,31 @@ class Piece
 
 
   def move_into_check?(pos)
-    old_position = position
     deep_dup
-    dup_board[pos] = self.Class.new(pos, dup_board, colour)
-    dup_board[position] = nil
+    #print [pos.first, pos.last]
 
-    if deep_dup.in_check?(colour)
-      position = old_position
-    end
+    @dup_board[pos] = self.class.new(pos, @dup_board, colour)
+    @dup_board[position] = nil
+    return @dup_board.in_check?(colour)
+
   end
 
 
 
   def deep_dup
-    dup_board = Board.new(false)
+    @dup_board = Board.new(false)
 
-    dup_board.board.each_with_index do |dup_row,idx1|
+    @dup_board.board.each_with_index do |dup_row,idx1|
       dup_row.each_index do |idx2|
         pos = [idx1, idx2]
         unless board[pos].nil?
           piece_class = board[pos].class
           piece_colour = board[pos].colour
-          dup_board[pos] = piece_class.new(pos, dup_board, piece_colour)
+          @dup_board[pos] = piece_class.new(pos, @dup_board, piece_colour)
         end
       end
     end
-    dup_board
+    @dup_board
   end
 
   def render
