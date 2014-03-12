@@ -184,6 +184,7 @@ class Pawn < Piece
   end
 
   def white_moves(x,y)
+    moves = []
     if y == 1  #leap forwards
       move = [x, y + 2]
       moves << move if board[[x, y + 1]].nil? && board[move].nil?
@@ -207,6 +208,7 @@ class Pawn < Piece
   end
 
   def black_moves(x,y)
+    moves = []
     if y == 6  #leap forwards
       move = [x, y - 2]
       moves << move if board[[x, y - 1]].nil? && board[move].nil?
