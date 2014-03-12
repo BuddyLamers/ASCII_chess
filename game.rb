@@ -9,10 +9,10 @@ class Game
 
   def run
     intro
-
+    board.render
     loop do
       w_start, w_end = player_1.play_turn
-      board.move(w_start, w_end)
+      board.move(w_start, w_end, player_1.colour)
       if board.checkmate?(:B)
         end_game(:W)
         break
@@ -20,7 +20,7 @@ class Game
 
 
       b_start, b_end = player_2.play_turn
-      board.move(b_start, b_end)
+      board.move(b_start, b_end, player_2.colour)
       if board.checkmate?(:W)
         end_game(:B)
         break

@@ -59,12 +59,18 @@ class Board
     false
   end
 
-  def move(start, end_pos)
+  def move(start, end_pos, colour)
+
     start_pos_piece = self[start]
     end_pos_piece = self[end_pos]
 
     if start_pos_piece.nil?
       puts "nothing there"
+      return
+    end
+
+    if start_pos_piece.colour != colour
+      puts "not your piece"
       return
     end
 
