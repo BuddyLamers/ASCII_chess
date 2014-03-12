@@ -95,7 +95,7 @@ class Board
     # =>  if array is empty (no valid moves) the checkmate
 
     #if pieces.each.moves each,move_into_check.any? == true
-    allies = find_allies
+    allies = find_allies(colour)
 
     allies.each do |piece|
       piece.moves.each do |move|
