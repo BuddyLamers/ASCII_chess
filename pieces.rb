@@ -33,6 +33,37 @@ class Piece
     square.colour != @colour #returns true if enemy
   end
 
+  def move_into_check?(pos)
+
+  end
+
+
+  # BOARD METHOD
+  # def add_piece(piece, pos)
+  #   self[pos] = piece.class.new(pos, self, piece.colour)
+  # end
+
+  def deep_friggin_dup
+    dup = Board.new(false)
+
+    #dup.add_piece(@board(coord), dup)
+
+    dup.board.each_with_index do |dup_row,idx1|
+      dup_row.each_index do |idx2|
+        pos = [idx1, idx2]
+
+        #board[pos]
+
+        dup.add_piece( board[pos], pos ) unless board[pos].nil?
+        #dup.add_piece(board[pos], pos)
+
+
+        #dup[pos]  = board[pos]
+      end
+    end
+    dup
+  end
+
   def render
     return "[#{colour},K]" if self.class == King
     return "[#{colour},Q]" if self.class == Queen
