@@ -63,11 +63,16 @@ class Board
     start_pos_piece = self[start]
     end_pos_piece = self[end_pos]
 
-    puts "nothing there" if start_pos_piece.nil?
-    break
+    if start_pos_piece.nil?
+      puts "nothing there"
+      return
+    end
+
     if start_pos_piece.moves.include?(end_pos)
-      puts "Into check" if start_pos_piece.move_into_check?(end_pos)
-      break
+      if start_pos_piece.move_into_check?(end_pos)
+        puts "Into check"
+        return
+      end
 
       if !end_pos_piece.nil?
         puts "The #{start_pos_piece.render} captured the #{end_pos_piece.render}"
@@ -76,6 +81,7 @@ class Board
 
       add_piece(start_pos_piece, end_pos)
       remove_piece(start)
+
     end
     render
   end
@@ -105,7 +111,6 @@ class Board
     board.flatten.each do |square|
       next if square.nil?
       allies << square if square.colour == colour
-      end
     end
     allies
   end
