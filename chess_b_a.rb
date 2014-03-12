@@ -175,16 +175,28 @@ class Pawn < Piece
   def moves
     moves = []
     x, y = @position[0], @position[1]
-    if y == 1 #|| 6 #leap forwards
+    if y == 1  #leap forwards
       move = [x, y + 2]
       moves << move if board[[x, y + 1]].nil? && board[move].nil?
     end
-    p [x, y + 1]
 
-    pos_cap1 = [x, y + 1]
-    moves << pos_cap1 if on_board?(pos_cap1) || !pos_cap1.nil? || allied_collision?(pos_cap1)
-    pos_cap2 = [x-1, y + 1]
-    moves << pos_cap2 if on_board?(pos_cap2) || !pos_cap2.nil? || allied_collision?(pos_cap2)
+    move_1 = [x, y + 1]
+    if ([on_board?(move_1), board[move_1].nil?].all?)
+      moves << move_1
+    end
+
+    cap_1 = [x + 1, y + 1]
+    if ([on_board?(cap_1), !board[cap_1].nil?, !allied_collision?(cap_1)].all?)
+      moves << cap_1
+    end
+
+    cap_2 = [x - 1, y + 1]
+    if ([on_board?(cap_2), !board[cap_2].nil?, !allied_collision?(cap_2)].all?)
+      moves << cap_2
+    end
+
+    #pos_cap2 = [x-1, y + 1]
+    #moves << pos_cap2 if on_board?(pos_cap2) || !pos_cap2.nil? || allied_collision?(pos_cap2)
     #moves << [x+1, y+1] if capture_opportunity?([x+1, y+1]) #cap r
     #moves << [x-1, y+1] if capture_opportunity?([x-1, y+1]) #cap l
 
