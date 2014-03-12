@@ -52,6 +52,9 @@ class Board
 
     board.flatten.each do |square|
       next if square.nil?
+      puts "HERE IS THE #{square.colour}, #{square.class}"
+      puts "square.pos is #{square.position}"
+      puts "square.moves are: #{square.moves}"
       if square.class != King && square.colour == enemy_colour
         return true if square.moves.include?(position)
       end

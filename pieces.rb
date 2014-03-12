@@ -44,11 +44,14 @@ class Piece
 
 
   def move_into_check?(pos)
+
     deep_dup
     #print [pos.first, pos.last]
 
     @dup_board[pos] = self.class.new(pos, @dup_board, colour)
     @dup_board[position] = nil
+    #debugger
+
     return @dup_board.in_check?(colour)
 
   end
@@ -226,12 +229,12 @@ class Pawn < Piece
     end
 
     cap_1 = [x + 1, y + 1]
-    if ([on_board?(cap_1), !board[cap_1].nil?, !allied_collision?(cap_1)].all?)
+    if on_board?(cap_1) && !board[cap_1].nil? && !allied_collision?(cap_1)
       moves << cap_1
     end
 
     cap_2 = [x - 1, y + 1]
-    if ([on_board?(cap_2), !board[cap_2].nil?, !allied_collision?(cap_2)].all?)
+    if on_board?(cap_2) && !board[cap_2].nil? && !allied_collision?(cap_2)
       moves << cap_2
     end
     moves
@@ -250,12 +253,12 @@ class Pawn < Piece
     end
 
     cap_1 = [x + 1, y - 1]
-    if ([on_board?(cap_1), !board[cap_1].nil?, !allied_collision?(cap_1)].all?)
+    if on_board?(cap_1) && !board[cap_1].nil? && !allied_collision?(cap_1)
       moves << cap_1
     end
 
     cap_2 = [x - 1, y - 1]
-    if ([on_board?(cap_2), !board[cap_2].nil?, !allied_collision?(cap_2)].all?)
+    if on_board?(cap_2) && !board[cap_2].nil? && !allied_collision?(cap_2)
       moves << cap_2
     end
     moves
