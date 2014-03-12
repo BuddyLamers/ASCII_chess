@@ -63,9 +63,11 @@ class Board
     start_pos_piece = self[start]
     end_pos_piece = self[end_pos]
 
-    raise "nothing there" if start_pos_piece.nil?
+    puts "nothing there" if start_pos_piece.nil?
+    break
     if start_pos_piece.moves.include?(end_pos)
-      raise "Into check" if start_pos_piece.move_into_check?(end_pos)
+      puts "Into check" if start_pos_piece.move_into_check?(end_pos)
+      break
 
       if !end_pos_piece.nil?
         puts "The #{start_pos_piece.render} captured the #{end_pos_piece.render}"
@@ -76,6 +78,36 @@ class Board
       remove_piece(start)
     end
     render
+  end
+
+  def checkmate?(colour)
+    return false unless in_check?(colour)
+
+    valid_moves = []
+    # iterate through all of that colours pieces
+    # => add their moves to an array
+    # =>  if array is empty (no valid moves) the checkmate
+
+    #if pieces.each.moves each,move_into_check.any? == true
+    allies = find_allies
+
+    allies.each do |piece|
+      piece.moves.each do |move|
+        return false if !piece.move_into_check?(move)
+      end
+    end
+    true
+  end
+
+  def find_allies(colour)
+    allies = []
+
+    board.flatten.each do |square|
+      next if square.nil?
+      allies << square if square.colour == colour
+      end
+    end
+    allies
   end
 
   def add_piece(piece, pos)

@@ -35,14 +35,6 @@ class Piece
     square.colour != @colour #returns true if enemy
   end
 
-  # def in_check?(colour)
-#     king_pos = find_king(colour)
-#     check_enemy_moves(colour, king_pos)
-#   end
-#
-
-
-
   def move_into_check?(pos)
     deep_dup
     @dup_board[pos] = self.class.new(pos, @dup_board, colour)
@@ -50,8 +42,6 @@ class Piece
 
     return @dup_board.in_check?(colour)
   end
-
-
 
   def deep_dup
     @dup_board = Board.new(false)
