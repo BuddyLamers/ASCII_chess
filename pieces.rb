@@ -1,6 +1,6 @@
 class Piece
-  attr_accessor :position
-  attr_reader :colour, :board, :moves
+  attr_accessor :position, :dup_board
+  attr_reader :colour, :board, :moves, :dup_board
 
   def initialize(position, board, colour)
     @position, @board, @colour = position, board, colour
@@ -33,35 +33,41 @@ class Piece
     square.colour != @colour #returns true if enemy
   end
 
-  def move_into_check?(pos)
+  # def in_check?(colour)
+#     king_pos = find_king(colour)
+#     check_enemy_moves(colour, king_pos)
+#   end
+#
 
+
+
+  def move_into_check?(pos)
+    old_position = position
+    deep_dup
+    dup_board[pos] = self.Class.new(pos, dup_board, colour)
+    dup_board[position] = nil
+
+    if deep_dup.in_check?(colour)
+      position = old_position
+    end
   end
 
 
-  # BOARD METHOD
-  # def add_piece(piece, pos)
-  #   self[pos] = piece.class.new(pos, self, piece.colour)
-  # end
 
-  def deep_friggin_dup
-    dup = Board.new(false)
+  def deep_dup
+    dup_board = Board.new(false)
 
-    #dup.add_piece(@board(coord), dup)
-
-    dup.board.each_with_index do |dup_row,idx1|
+    dup_board.board.each_with_index do |dup_row,idx1|
       dup_row.each_index do |idx2|
         pos = [idx1, idx2]
-
-        #board[pos]
-
-        dup.add_piece( board[pos], pos ) unless board[pos].nil?
-        #dup.add_piece(board[pos], pos)
-
-
-        #dup[pos]  = board[pos]
+        unless board[pos].nil?
+          piece_class = board[pos].class
+          piece_colour = board[pos].colour
+          dup_board[pos] = piece_class.new(pos, dup_board, piece_colour)
+        end
       end
     end
-    dup
+    dup_board
   end
 
   def render

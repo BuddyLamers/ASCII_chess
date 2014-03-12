@@ -60,11 +60,6 @@ class Board
   end
 
   def move(start, end_pos)
-
-    #if the start space has a piece in it
-    # => check if end_pos is in the pieces moves array
-    # => if end_pos if nil, move piece
-    # => if end_pos == capture opportunity, then remove enemy piece, goes there puts "self.class captured otherpiece.class
     start_pos_piece = self[start]
     end_pos_piece = self[end_pos]
 
