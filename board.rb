@@ -38,8 +38,8 @@ class Board
   end
 
   def find_king(colour)
-    board.flatten.each do |square|
-      next if square.nil?
+    board.flatten.conpact.each do |square| # USE THIS BOARD.FLATTEN.COMPACT as a method
+      #next if square.nil?
       if square.class == King && square.colour == colour
         return square.position
       end
@@ -60,36 +60,42 @@ class Board
   end
 
   def move(start, end_pos, colour)
+    start_sq_content = self[start]
+    end_sq_content = self[end_pos]
 
-    start_pos_piece = self[start]
-    end_pos_piece = self[end_pos]
+    check_start_empty(start_sq_content)
+    check_colour(start_sq_content, colour)
+    check_move_in_range(start_sq_content,end_pos)
+    check_check(start_sq_content, end_pos)
 
-    if start_pos_piece.nil?
-      puts "nothing there"
-      return
+    if !end_sq_content.nil?
+      puts "The #{start_sq_content.render} captured the #{end_sq_content.render}"
+      remove_piece(end_pos)
     end
+    add_piece(start_sq_content, end_pos)
+    remove_piece(start)
 
-    if start_pos_piece.colour != colour
-      puts "not your piece"
-      return
-    end
-
-    if start_pos_piece.moves.include?(end_pos)
-      if start_pos_piece.move_into_check?(end_pos)
-        puts "Into check"
-        return
-      end
-
-      if !end_pos_piece.nil?
-        puts "The #{start_pos_piece.render} captured the #{end_pos_piece.render}"
-        remove_piece(end_pos)
-      end
-
-      add_piece(start_pos_piece, end_pos)
-      remove_piece(start)
-
-    end
     render
+  end
+
+  def check_start_empty(square)
+    raise InvalidMoveError.new "No piece at start position" if square.nil?
+  end
+
+  def check_colour(square, colour)
+    raise InvalidMoveError.new "Not your piece" if square.colour != colour
+  end
+
+  def check_check(start_sq, end_pos)
+    if start_sq.moves.move_into_check?(end_pos)
+      raise InvalidMoveError.new "Cannot move into or while in check"
+    end
+  end
+
+  def check_move_in_range(square, end_pos)
+    if !square.moves.include?(end_pos)
+      raise InvalidMoveError.new "Out of pieces range"
+    end
   end
 
   def checkmate?(colour)

@@ -1,7 +1,7 @@
 require "debugger"
 
 class Piece
-  attr_accessor :position, :dup_board
+  attr_accessor :position, :dup_board # => dup board, shouldn't be instance variable
   attr_reader :colour, :board, :moves
 
   def initialize(position, board, colour)
@@ -43,7 +43,7 @@ class Piece
     return @dup_board.in_check?(colour)
   end
 
-  def deep_dup
+  def deep_dup # should be in BOARD class
     @dup_board = Board.new(false)
 
     @dup_board.board.each_with_index do |dup_row,idx1|
@@ -52,13 +52,14 @@ class Piece
         unless board[pos].nil?
           piece_class = board[pos].class
           piece_colour = board[pos].colour
-          @dup_board[pos] = piece_class.new(pos, @dup_board, piece_colour)
+          @dup_board[pos] = piece_class.new(pos, @dup_board, piece_colour) #over write the pieces dup method
         end
       end
     end
     @dup_board
   end
 
+  #RENDER goes in each piece, and overwrite the to_s method
   def render
     return "[#{colour},K]" if self.class == King
     return "[#{colour},Q]" if self.class == Queen
@@ -108,6 +109,7 @@ class Bishop < SlidingPiece
     [-1, 1],
     [-1,-1]
   ]
+  #should contain diagonal constants...
 end
 
 class Rook < SlidingPiece
@@ -190,6 +192,7 @@ end
 
 
 class Pawn < Piece
+    #CLEAN UP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
   def moves
     moves = []
     x, y = @position[0], @position[1]
@@ -248,7 +251,6 @@ class Pawn < Piece
     end
     moves
   end
-
 
 end
 

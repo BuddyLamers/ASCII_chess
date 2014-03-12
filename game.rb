@@ -10,6 +10,8 @@ class Game
   def run
     intro
     board.render
+
+    #CLEAN UP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     loop do
       w_start, w_end = player_1.play_turn
       board.move(w_start, w_end, player_1.colour)
@@ -17,7 +19,6 @@ class Game
         end_game(:W)
         break
       end
-
 
       b_start, b_end = player_2.play_turn
       board.move(b_start, b_end, player_2.colour)
