@@ -52,9 +52,6 @@ class Board
 
     board.flatten.each do |square|
       next if square.nil?
-      puts "HERE IS THE #{square.colour}, #{square.class}"
-      puts "square.pos is #{square.position}"
-      puts "square.moves are: #{square.moves}"
       if square.class != King && square.colour == enemy_colour
         return true if square.moves.include?(position)
       end
@@ -68,6 +65,8 @@ class Board
 
     raise "nothing there" if start_pos_piece.nil?
     if start_pos_piece.moves.include?(end_pos)
+      raise "Into check" if start_pos_piece.move_into_check?(end_pos)
+
       if !end_pos_piece.nil?
         puts "The #{start_pos_piece.render} captured the #{end_pos_piece.render}"
         remove_piece(end_pos)

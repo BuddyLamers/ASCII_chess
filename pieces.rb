@@ -44,16 +44,11 @@ class Piece
 
 
   def move_into_check?(pos)
-
     deep_dup
-    #print [pos.first, pos.last]
-
     @dup_board[pos] = self.class.new(pos, @dup_board, colour)
     @dup_board[position] = nil
-    #debugger
 
     return @dup_board.in_check?(colour)
-
   end
 
 
