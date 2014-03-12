@@ -38,7 +38,7 @@ class Board
   end
 
   def find_king(colour)
-    board.flatten.conpact.each do |square| # USE THIS BOARD.FLATTEN.COMPACT as a method
+    board.flatten.compact.each do |square| # USE THIS BOARD.FLATTEN.COMPACT as a method
       #next if square.nil?
       if square.class == King && square.colour == colour
         return square.position
@@ -66,7 +66,7 @@ class Board
     check_start_empty(start_sq_content)
     check_colour(start_sq_content, colour)
     check_move_in_range(start_sq_content,end_pos)
-    check_check(start_sq_content, end_pos)
+    check_check(start_sq_content)
 
     if !end_sq_content.nil?
       puts "The #{start_sq_content.render} captured the #{end_sq_content.render}"
@@ -86,10 +86,13 @@ class Board
     raise InvalidMoveError.new "Not your piece" if square.colour != colour
   end
 
-  def check_check(start_sq, end_pos)
-    if start_sq.moves.move_into_check?(end_pos)
-      raise InvalidMoveError.new "Cannot move into or while in check"
-    end
+  def check_check(start_sq)
+    #call into_check on the POSITION of all the moves
+     start_sq.moves.each do |move|
+       if start_sq.move_into_check?(move)
+          raise InvalidMoveError.new "Cannot move into or while in check"
+       end
+     end
   end
 
   def check_move_in_range(square, end_pos)
@@ -118,6 +121,7 @@ class Board
   end
 
   def find_allies(colour)
+    #could be changed to a "pieces" method w/ b/w flags
     allies = []
 
     board.flatten.each do |square|
@@ -127,6 +131,7 @@ class Board
     allies
   end
 
+  #CLEAN UP ===== DON'T NEED
   def add_piece(piece, pos)
     self[pos] = piece.class.new(pos, self, piece.colour)
   end
