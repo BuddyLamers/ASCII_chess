@@ -13,15 +13,27 @@ class Game
 
     #CLEAN UP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     loop do
-      w_start, w_end = player_1.play_turn
-      board.move(w_start, w_end, player_1.colour)
+      begin
+        w_start, w_end = player_1.play_turn
+        board.move(w_start, w_end, player_1.colour)
+      rescue
+        puts "WRONG!!!!!!"
+        retry
+      end
+
       if board.checkmate?(:B)
         end_game(:W)
         break
       end
 
-      b_start, b_end = player_2.play_turn
-      board.move(b_start, b_end, player_2.colour)
+      begin
+        b_start, b_end = player_2.play_turn
+        board.move(b_start, b_end, player_2.colour)
+      rescue
+        puts "WRONG!!!!!"
+        retry
+      end
+
       if board.checkmate?(:W)
         end_game(:B)
         break
